@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
     val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
     val myCtfDAO = CtfDAOH2(myDataSource)
 
-    myCtfDAO.addGroupToCTF(Ctf(1, 2, 20))
+    println(myCtfDAO.addGroupToCTF(Ctf(1, 2, 20)))
 
     /*
     if (argsMap.keys.size != 1) {

@@ -3,4 +3,4 @@ enum class Results {
     SUCCESSFUL,
     FAILURE
 }
-data class Result<T> (val result: Results, val obj: T)
+data class Result<T, U> (val obj: T, val result: Results)
