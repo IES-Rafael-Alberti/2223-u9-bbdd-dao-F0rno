@@ -19,7 +19,6 @@ dependencies {
     implementation ("com.zaxxer:HikariCP:5.0.0")
     testImplementation("io.kotest:kotest-assertions-core-jvm:5.6.1")
     testImplementation("io.mockk:mockk:1.13.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-cli-linuxx64:0.3.5")
 }
 
 tasks.test {
