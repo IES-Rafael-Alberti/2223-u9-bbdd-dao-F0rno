@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
         when (argsMap["-l"]?.size) {
             0 -> TODO("Funcionality for -l empty (for all groups)")
             1 -> TODO("Funcionality for -l one group")
-            else ->     TODO("Error empty args -l")
+            else -> TODO("Error empty args -l")
         }
     }
     
