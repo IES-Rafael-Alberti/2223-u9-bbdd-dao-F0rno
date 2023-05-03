@@ -1,39 +1,42 @@
 import logs.i
-import kotlinx.cli.*
 
 data class Ctf(val id: Int, val grupoId: Int, val puntuacion: Int)
 data class Grupo(val grupoid: Int, val mejorCtfId: Int = 0)
 
 fun main(args: Array<String>) {
-
-    val map = args.fold(Pair(emptyMap<String, List<String>>(), "")) { (map, lastKey), elem ->
+    val argsMap = args.fold(Pair(emptyMap<String, List<String>>(), "")) { (map, lastKey), elem ->
         if (elem.startsWith("-"))  Pair(map + (elem to emptyList()), elem)
         else Pair(map + (lastKey to map.getOrDefault(lastKey, emptyList()) + elem), lastKey)
     }.first
 
-    println(map)
+    if (argsMap.keys.size != 1) {
+        TODO("1 parameter")
+    }
 
-    /*
-    val parser = ArgParser("config-args")
-    val groupData by parser.option(
-        ArgType.Int,
-        shortName = "a",
-        description = "Añadir participación de un grupo: <ctfid> <grupoId> <puntuacion>"
-    ).multiple()
-    class Groups: Subcommand("a", "") {
-        val numbers by argument(ArgType.Int, description = "").vararg()
-        override fun execute() {
-            TODO("Not yet implemented")
+    if (argsMap["-a"] != null) {
+        when (argsMap["-a"]?.size) {
+            3 -> TODO("Funcionality for -a")
+            else -> TODO("Error empty args -a")
         }
     }
-    val groups = Groups()
-    parser.subcommands(, groups)
-    parser.parse(args)
-    println(groupData)
 
-    //i("main", "funcionan los logs")
+    if (argsMap["-d"] != null) {
+        when (argsMap["-d"]?.size) {
+            2 -> TODO("Funcionality for -d")
+            else -> TODO("Error empty args -d")
+        }
+    }
 
-     */
+    if (argsMap["-l"] != null) {
+        when (argsMap["-l"]?.size) {
+            0 -> TODO("Funcionality for -l empty (for all groups)")
+            1 -> TODO("Funcionality for -l one group")
+            else ->     TODO("Error empty args -l")
+        }
+    }
+    
+    i("main", "funcionan los logs")
+
     /*
     val participaciones = listOf(Ctf(1, 1, 3), Ctf(1, 2, 101), Ctf(2, 2, 3), Ctf(2, 1, 50), Ctf(2, 3, 1), Ctf(3, 1, 50), Ctf(3, 3, 5))
     val mejoresCtfByGroupId = calculaMejoresResultados(participaciones)
