@@ -1,7 +1,6 @@
+import DAO.CtfDAOH2
+import dataSource.DataSourceFactory
 import logs.i
-
-data class Ctf(val id: Int, val grupoId: Int, val puntuacion: Int)
-data class Grupo(val grupoid: Int, val mejorCtfId: Int = 0)
 
 fun main(args: Array<String>) {
     val argsMap = args.fold(Pair(emptyMap<String, List<String>>(), "")) { (map, lastKey), elem ->
@@ -9,6 +8,12 @@ fun main(args: Array<String>) {
         else Pair(map + (lastKey to map.getOrDefault(lastKey, emptyList()) + elem), lastKey)
     }.first
 
+    val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
+    val myCtfDAO = CtfDAOH2(myDataSource)
+
+    myCtfDAO.addGroupToCTF(Ctf(1, 2, 20))
+
+    /*
     if (argsMap.keys.size != 1) {
         TODO("1 parameter")
     }
@@ -37,6 +42,8 @@ fun main(args: Array<String>) {
     
     i("main", "funcionan los logs")
 
+
+     */
     /*
     val participaciones = listOf(Ctf(1, 1, 3), Ctf(1, 2, 101), Ctf(2, 2, 3), Ctf(2, 1, 50), Ctf(2, 3, 1), Ctf(3, 1, 50), Ctf(3, 3, 5))
     val mejoresCtfByGroupId = calculaMejoresResultados(participaciones)
