@@ -1,12 +1,16 @@
+import logs.i
 data class Ctf(val id: Int, val grupoId: Int, val puntuacion: Int)
 data class Grupo(val grupoid: Int, val mejorCtfId: Int = 0)
 
 fun main(args: Array<String>) {
 
+    i("main", "funcionan los logs")
+
+    /*
     val participaciones = listOf(Ctf(1, 1, 3), Ctf(1, 2, 101), Ctf(2, 2, 3), Ctf(2, 1, 50), Ctf(2, 3, 1), Ctf(3, 1, 50), Ctf(3, 3, 5))
     val mejoresCtfByGroupId = calculaMejoresResultados(participaciones)
     println(mejoresCtfByGroupId)
-
+     */
 }
 
 /**
@@ -21,7 +25,7 @@ fun main(args: Array<String>) {
  */
 private fun calculaMejoresResultados(participaciones: List<Ctf>): MutableMap<Int, Pair<Int, Ctf>> {
     val participacionesByCTFId = participaciones.groupBy { it.id }
-    var participacionesByGrupoId = participaciones.groupBy { it.grupoId }
+    val participacionesByGrupoId = participaciones.groupBy { it.grupoId }
     val mejoresCtfByGroupId = mutableMapOf<Int, Pair<Int, Ctf>>()
     participacionesByCTFId.values.forEach { ctfs ->
         val ctfsOrderByPuntuacion = ctfs.sortedBy { it.puntuacion }.reversed()
