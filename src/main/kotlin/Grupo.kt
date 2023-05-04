@@ -1,1 +1,1 @@
-data class Grupo(val grupoid: Int, val mejorCtfId: Int = 0)
+data class Grupo(val grupoid: Int, val grupoDesc: String, val mejorCtfId: Int = 0)

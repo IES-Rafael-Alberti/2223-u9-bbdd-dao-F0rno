@@ -45,11 +45,34 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
         }
     }
 
-    override fun showAllGroup(): List<Grupo> {
+    override fun showAllGroups(): List<Grupo> {
         TODO("Not yet implemented")
     }
 
-    override fun showGroup(grupoid: Int): Grupo {
-        TODO("Not yet implemented")
+    override fun showGroup(grupoid: Int): Result<Grupo, Results> {
+        val sql = "SELECT * FROM GRUPOS WHERE GRUPOID = ?;"
+        dataSource.connection.use { conn ->
+            conn.prepareStatement(sql).use { stmt ->
+                stmt.setInt(1, grupoid)
+                var grupo = Grupo(0, "", 0)
+                try {
+                    val rs = stmt.executeQuery()
+                    if (rs.next()) {
+                        grupo = Grupo(
+                            grupoid = rs.getInt("GRUPOID"),
+                            grupoDesc = rs.getString("GRUPODESC"),
+                            mejorCtfId = rs.getInt("MEJORPOSCTFID"),
+                        )
+                    }
+                } catch (e: SQLException) {
+                    println(e)
+                    return Result(grupo, Results.FAILURE)
+                } catch (e: Exception) {
+                    println(e)
+                    return Result(grupo, Results.FAILURE)
+                }
+                return Result(grupo, Results.SUCCESSFUL)
+            }
+        }
     }
 }
