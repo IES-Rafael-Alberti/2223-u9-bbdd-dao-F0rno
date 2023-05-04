@@ -1,4 +1,6 @@
 import DAO.CtfDAOH2
+import DAO.GrupoDAO
+import DAO.GrupoDAOH2
 import dataSource.DataSourceFactory
 import logs.i
 
@@ -10,8 +12,9 @@ fun main(args: Array<String>) {
 
     val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
     val myCtfDAO = CtfDAOH2(myDataSource)
+    val myGrupoDAO = GrupoDAOH2(myDataSource)
 
-    println(myCtfDAO.showAllGroups())
+    println(myGrupoDAO.showAllGroups())
 
     /*
     if (argsMap.keys.size != 1) {
