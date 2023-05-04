@@ -19,9 +19,9 @@ fun main(args: Array<String>) {
     val myDBChecker = DataBaseChecker(DataSourceFactory)
     val myDataBaseMaker = DataBaseMaker(myDataSource)
 
-
+    /*
     if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
-        listOf(Tables.GRUPOS, Tables.CTFS).forEach { table ->
+        Tables.values().forEach { table ->
             val rs = myDBChecker.exitsThisTable(table.toString())
             when (rs.result) {
                 Results.SUCCESSFUL -> println("La tabla ${table.toString()} existe")
@@ -31,9 +31,7 @@ fun main(args: Array<String>) {
     } else {
         println(2)
     }
-
-
-
+     */
     /*
     if (argsMap.keys.size != 1) {
         TODO("1 parameter")

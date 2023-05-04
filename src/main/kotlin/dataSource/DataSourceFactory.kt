@@ -8,7 +8,7 @@ import javax.sql.DataSource
 
 object DataSourceFactory {
     fun getDS(dataSourceType: DataSourceType): Result<DataSource, Results> {
-        return when (dataSourceType) {
+        when (dataSourceType) {
             DataSourceType.HIKARI -> {
                 val config = HikariConfig()
                 config.jdbcUrl = "jdbc:h2:./default"
@@ -18,13 +18,12 @@ object DataSourceFactory {
                 config.maximumPoolSize = 10
                 config.isAutoCommit = true
                 config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-                lateinit var dataSource: DataSource
                 try {
-                    dataSource = HikariDataSource(config)
+                    HikariDataSource(config).close()
                 } catch (e: Exception) {
-                    return Result(dataSource, Results.FAILURE)
+                    return Result(HikariDataSource(config), Results.FAILURE)
                 }
-                return Result(dataSource, Results.SUCCESSFUL)
+                return Result(HikariDataSource(config), Results.SUCCESSFUL)
             }
         }
     }
