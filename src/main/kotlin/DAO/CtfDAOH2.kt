@@ -16,9 +16,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                 stmt.setString(2, ctf.grupoId.toString())
                 stmt.setString(3, ctf.puntuacion.toString())
                 try {
-                    val rs = stmt.executeUpdate()
-                } catch (e: SQLException) {
-                    return Result(ctf, Results.FAILURE)
+                    stmt.executeUpdate()
                 } catch (e: Exception) {
                     return Result(ctf, Results.FAILURE)
                 }
@@ -34,9 +32,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                 stmt.setString(1, grupoid.toString())
                 val rs = stmt.executeUpdate()
                 try {
-                    val rs = stmt.executeUpdate()
-                } catch (e: SQLException) {
-                    return Result(grupoid, Results.FAILURE)
+                    stmt.executeUpdate()
                 } catch (e: Exception) {
                     return Result(grupoid, Results.FAILURE)
                 }
@@ -46,7 +42,26 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
     }
 
     override fun showAllGroups(): List<Grupo> {
-        TODO("Not yet implemented")
+        val sql = "SELECT * FROM GRUPOS;"
+        dataSource.connection.use { conn ->
+            conn.prepareStatement(sql).use { stmt ->
+                val grupos = mutableListOf<Grupo>()
+                try {
+                    val rs = stmt.executeQuery()
+                    while (rs.next()) {
+                            grupos.add(Grupo(
+                                grupoid = rs.getInt("GRUPOID"),
+                                grupoDesc = rs.getString("GRUPODESC"),
+                                mejorCtfId = rs.getInt("MEJORPOSCTFID"),
+                            )
+                        )
+                    }
+                } catch (e: Exception) {
+                    return grupos
+                }
+                return grupos
+            }
+        }
     }
 
     override fun showGroup(grupoid: Int): Result<Grupo, Results> {
@@ -64,11 +79,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                             mejorCtfId = rs.getInt("MEJORPOSCTFID"),
                         )
                     }
-                } catch (e: SQLException) {
-                    println(e)
-                    return Result(grupo, Results.FAILURE)
                 } catch (e: Exception) {
-                    println(e)
                     return Result(grupo, Results.FAILURE)
                 }
                 return Result(grupo, Results.SUCCESSFUL)

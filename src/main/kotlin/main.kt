@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
     val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
     val myCtfDAO = CtfDAOH2(myDataSource)
 
-    println(myCtfDAO.showGroup(1))
+    println(myCtfDAO.showAllGroups())
 
     /*
     if (argsMap.keys.size != 1) {
