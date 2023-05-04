@@ -1,5 +1,8 @@
 import DAO.CtfDAOH2
 import DAO.GrupoDAOH2
+import dataBase.DataBaseChecker
+import dataBase.DataBaseMaker
+import dataBase.Tables
 import dataSource.DataSourceFactory
 import railway.Results
 
@@ -13,11 +16,13 @@ fun main(args: Array<String>) {
     val myCtfDAO = CtfDAOH2(myDataSource)
     val myGrupoDAO = GrupoDAOH2(myDataSource)
     val myDBChecker = DataBaseChecker(DataSourceFactory)
+    val myDataBaseMaker = DataBaseMaker(myDataSource)
 
     if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
-        when (myDBChecker.exitsThisTable("GRUPOS").result) {
-            Results.SUCCESSFUL -> println("La table existe")
-            Results.FAILURE -> println("La tabla no existe")
+        val rs = myDBChecker.exitsThisTable("CTFS").result
+        when (rs) {
+            Results.SUCCESSFUL -> println("La tabla existe")
+            Results.FAILURE -> myDataBaseMaker.createTable(Tables.CFTS)
         }
     } else {
         println(2)
