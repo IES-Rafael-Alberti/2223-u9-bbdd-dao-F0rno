@@ -4,6 +4,7 @@ import dataBase.DataBaseChecker
 import dataBase.DataBaseMaker
 import dataBase.Tables
 import dataSource.DataSourceFactory
+import dataSource.DataSourceType
 import railway.Results
 
 fun main(args: Array<String>) {
@@ -12,33 +13,27 @@ fun main(args: Array<String>) {
         else Pair(map + (lastKey to map.getOrDefault(lastKey, emptyList()) + elem), lastKey)
     }.first
 
-    val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
+    val myDataSource = DataSourceFactory.getDS(DataSourceType.HIKARI).obj
     val myCtfDAO = CtfDAOH2(myDataSource)
     val myGrupoDAO = GrupoDAOH2(myDataSource)
     val myDBChecker = DataBaseChecker(DataSourceFactory)
     val myDataBaseMaker = DataBaseMaker(myDataSource)
 
+
     if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
-        val rs = myDBChecker.exitsThisTable("CTFS").result
-        when (rs) {
-            Results.SUCCESSFUL -> println("La tabla existe")
-            Results.FAILURE -> myDataBaseMaker.createTable(Tables.CFTS)
+        listOf(Tables.GRUPOS, Tables.CTFS).forEach { table ->
+            val rs = myDBChecker.exitsThisTable(table.toString())
+            when (rs.result) {
+                Results.SUCCESSFUL -> println("La tabla ${table.toString()} existe")
+                Results.FAILURE -> myDataBaseMaker.createTable(table)
+            }
         }
     } else {
         println(2)
     }
-    //
-    /*
-    myDataSource.connection.use { conn ->
-        val dbName = "d"
-        val rs = conn.metaData.getTables(null, null, dbName, null)
-        if (rs.next()) {
-            println("La base de datos $dbName existe.")
-        } else {
-            println("La base de datos $dbName no existe.")
-        }
-    }
-    */
+
+
+
     /*
     if (argsMap.keys.size != 1) {
         TODO("1 parameter")

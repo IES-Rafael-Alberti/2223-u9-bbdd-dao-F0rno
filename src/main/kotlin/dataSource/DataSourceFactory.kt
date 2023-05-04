@@ -2,14 +2,12 @@ package dataSource
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import railway.Result
+import railway.Results
 import javax.sql.DataSource
 
 object DataSourceFactory {
-    enum class DataSourceType {
-        HIKARI
-    }
-
-    fun getDS(dataSourceType: DataSourceType): DataSource {
+    fun getDS(dataSourceType: DataSourceType): Result<DataSource, Results> {
         return when (dataSourceType) {
             DataSourceType.HIKARI -> {
                 val config = HikariConfig()
@@ -20,7 +18,13 @@ object DataSourceFactory {
                 config.maximumPoolSize = 10
                 config.isAutoCommit = true
                 config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-                HikariDataSource(config)
+                lateinit var dataSource: DataSource
+                try {
+                    dataSource = HikariDataSource(config)
+                } catch (e: Exception) {
+                    return Result(dataSource, Results.FAILURE)
+                }
+                return Result(dataSource, Results.SUCCESSFUL)
             }
         }
     }

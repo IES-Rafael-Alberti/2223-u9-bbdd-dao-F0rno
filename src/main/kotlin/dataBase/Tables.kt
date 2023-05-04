@@ -1,6 +1,6 @@
 package dataBase
 
 enum class Tables() {
-    CFTS,
-    GRUPOS
+    GRUPOS,
+    CTFS
 }
