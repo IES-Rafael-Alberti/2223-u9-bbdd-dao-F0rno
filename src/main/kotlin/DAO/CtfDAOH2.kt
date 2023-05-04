@@ -27,8 +27,22 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
         }
     }
 
-    override fun deletGroupFromCTF(grupoid: Int, ctfid: Int) {
-        TODO("Not yet implemented")
+    override fun deletGroupFromCTF(grupoid: Int, ctfid: Int): Result<Int, Results> {
+        val sql = "DELETE FROM CTFS WHERE GRUPOID = ?;"
+        dataSource.connection.use { conn ->
+            conn.prepareStatement(sql).use { stmt ->
+                stmt.setString(1, grupoid.toString())
+                val rs = stmt.executeUpdate()
+                try {
+                    val rs = stmt.executeUpdate()
+                } catch (e: SQLException) {
+                    return Result(grupoid, Results.FAILURE)
+                } catch (e: Exception) {
+                    return Result(grupoid, Results.FAILURE)
+                }
+                return Result(grupoid, Results.SUCCESSFUL)
+            }
+        }
     }
 
     override fun showAllGroup(): List<Grupo> {
