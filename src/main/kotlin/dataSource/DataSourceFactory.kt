@@ -21,7 +21,6 @@ object DataSourceFactory {
                 config.isAutoCommit = true
                 config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
                 HikariDataSource(config)
-                TODO("Puede que tenga que añadir un control de errores aqui")
             }
         }
     }

@@ -1,8 +1,7 @@
 import DAO.CtfDAOH2
-import DAO.GrupoDAO
 import DAO.GrupoDAOH2
 import dataSource.DataSourceFactory
-import logs.i
+import railway.Results
 
 fun main(args: Array<String>) {
     val argsMap = args.fold(Pair(emptyMap<String, List<String>>(), "")) { (map, lastKey), elem ->
@@ -13,7 +12,18 @@ fun main(args: Array<String>) {
     val myDataSource = DataSourceFactory.getDS(DataSourceFactory.DataSourceType.HIKARI)
     val myCtfDAO = CtfDAOH2(myDataSource)
     val myGrupoDAO = GrupoDAOH2(myDataSource)
+    val myDBChecker = DataBaseChecker(DataSourceFactory)
 
+    if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
+        when (myDBChecker.exitsThisTable("GRUPOS").result) {
+            Results.SUCCESSFUL -> println("La table existe")
+            Results.FAILURE -> println("La tabla no existe")
+        }
+    } else {
+        println(2)
+    }
+    //
+    /*
     myDataSource.connection.use { conn ->
         val dbName = "d"
         val rs = conn.metaData.getTables(null, null, dbName, null)
@@ -23,7 +33,7 @@ fun main(args: Array<String>) {
             println("La base de datos $dbName no existe.")
         }
     }
-
+    */
     /*
     if (argsMap.keys.size != 1) {
         TODO("1 parameter")
