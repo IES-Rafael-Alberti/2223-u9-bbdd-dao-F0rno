@@ -14,7 +14,15 @@ fun main(args: Array<String>) {
     val myCtfDAO = CtfDAOH2(myDataSource)
     val myGrupoDAO = GrupoDAOH2(myDataSource)
 
-    println(myGrupoDAO.showAllGroups())
+    myDataSource.connection.use { conn ->
+        val dbName = "d"
+        val rs = conn.metaData.getTables(null, null, dbName, null)
+        if (rs.next()) {
+            println("La base de datos $dbName existe.")
+        } else {
+            println("La base de datos $dbName no existe.")
+        }
+    }
 
     /*
     if (argsMap.keys.size != 1) {
