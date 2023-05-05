@@ -32,12 +32,12 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
         }
     }
 
-    override fun showGroup(grupoid: Int): Result<Grupo, Results> {
+    override fun showGroup(grupoId: Int): Result<Grupo, Results> {
         val sql = "SELECT * FROM GRUPOS WHERE GRUPOID = ?;"
         dataSource.connection.use { conn ->
             i("GrupoDAOH2.showGroup", "Preparing statement")
             conn.prepareStatement(sql).use { stmt ->
-                stmt.setInt(1, grupoid)
+                stmt.setInt(1, grupoId)
                 var grupo = Grupo(0, "", 0)
                 try {
                     i("GrupoDAOH2.showGroup", "Executing query")
@@ -53,6 +53,24 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
                     return Result(grupo, Results.FAILURE)
                 }
                 return Result(grupo, Results.SUCCESSFUL)
+            }
+        }
+    }
+
+    override fun addMejorPosCtfId(grupoId: Int, ctfId: Int): Results {
+        val sql = "update GRUPOS set MEJORPOSCTFID = ? where GRUPOID = ?;"
+        dataSource.connection.use { conn ->
+            i("GrupoDAOH2.addMejorPosCtfId", "Preparing statement")
+            conn.prepareStatement(sql).use { stmt ->
+                stmt.setInt(1, ctfId)
+                stmt.setInt(2, grupoId)
+                try {
+                    i("GrupoDAOH2.addMejorPosCtfId", "Executing update")
+                    stmt.executeUpdate()
+                } catch (e: Exception) {
+                    return Results.FAILURE
+                }
+                return Results.SUCCESSFUL
             }
         }
     }

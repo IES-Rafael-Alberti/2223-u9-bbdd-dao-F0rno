@@ -17,15 +17,19 @@ fun main(args: Array<String>) {
     if (myDBChecker.exitsTheDB(DataSourceType.HIKARI) == Results.SUCCESSFUL) {
         val myDataSource = DataSourceFactory.getDS(DataSourceType.HIKARI)
         val myDataBaseMaker = DataBaseMaker(myDataSource)
+        val myGrupoDAO = GrupoDAOH2(myDataSource)
         Tables.values().forEach {
             if (myDBChecker.exitsThisTable(it.toString()).result == Results.SUCCESSFUL) {
-                println("Service")
+                if (it == Tables.GRUPOS) {
+                    val rs = myGrupoDAO.addMejorPosCtfId(1, 0)
+                    if (rs == Results.SUCCESSFUL) println("Done")
+                }
             } else {
                 myDataBaseMaker.createTable(it)
             }
         }
     } else {
-        println("No DB")
+        println("Cant connecto to the data base")
     }
 
     /*

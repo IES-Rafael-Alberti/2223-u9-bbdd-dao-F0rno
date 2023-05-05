@@ -22,12 +22,12 @@ class DataBaseMaker(private val dataSource: DataSource) {
                 mejorposCTFid INT,
                 PRIMARY KEY (grupoid)
             );
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(1, '1DAM-G1', 0);
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(2, '1DAM-G2', 0);
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(3, '1DAM-G3', 0);
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(4, '1DAW-G1', 0);
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(5, '1DAW-G2', 0);
-            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(6, '1DAW-G3', 0);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(1, '1DAM-G1', null);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(2, '1DAM-G2', null);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(3, '1DAM-G3', null);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(4, '1DAW-G1', null);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(5, '1DAW-G2', null);
+            insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(6, '1DAW-G3', null);
         """.trimIndent(),
     )
     fun createTable(table: Tables): Result<String, Results> {

@@ -5,6 +5,7 @@ import railway.Result
 import railway.Results
 
 interface GrupoDAO {
-    fun showGroup(grupoid: Int): Result<Grupo, Results>
+    fun showGroup(grupoId: Int): Result<Grupo, Results>
     fun showAllGroups(): List<Grupo>
+    fun addMejorPosCtfId(grupoId: Int, ctfId: Int): Results
 }
