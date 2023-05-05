@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
 
     val parseArgs = ArgsParser.parse(args)
     println(parseArgs)
+    println(ArgsParser.validateArguments(parseArgs))
 
     /*
     val myDBChecker = DataBaseChecker(DataSourceFactory)
@@ -29,7 +30,7 @@ fun main(args: Array<String>) {
             }
         }
     } else {
-        println("Cant connecto to the data base")
+        println("Cant connecto to the database")
     }
     
      */
