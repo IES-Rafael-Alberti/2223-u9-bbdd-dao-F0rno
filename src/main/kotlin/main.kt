@@ -5,7 +5,6 @@ import dataBase.DataBaseMaker
 import dataBase.Tables
 import dataSource.DataSourceFactory
 import dataSource.DataSourceType
-import logs.i
 import railway.Results
 
 fun main(args: Array<String>) {
@@ -14,13 +13,10 @@ fun main(args: Array<String>) {
         else Pair(map + (lastKey to map.getOrDefault(lastKey, emptyList()) + elem), lastKey)
     }.first
 
-    val myDataSource = DataSourceFactory.getDS(DataSourceType.HIKARI).obj
-    val myCtfDAO = CtfDAOH2(myDataSource)
-    val myGrupoDAO = GrupoDAOH2(myDataSource)
     val myDBChecker = DataBaseChecker(DataSourceFactory)
-    val myDataBaseMaker = DataBaseMaker(myDataSource)
-
-    if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
+    if (myDBChecker.exitsTheDB(DataSourceType.HIKARI) == Results.SUCCESSFUL) {
+        val myDataSource = DataSourceFactory.getDS(DataSourceType.HIKARI)
+        val myDataBaseMaker = DataBaseMaker(myDataSource)
         Tables.values().forEach {
             if (myDBChecker.exitsThisTable(it.toString()).result == Results.SUCCESSFUL) {
                 println("Service")

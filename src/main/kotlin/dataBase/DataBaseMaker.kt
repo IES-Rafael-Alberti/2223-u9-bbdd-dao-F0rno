@@ -33,7 +33,6 @@ class DataBaseMaker(private val dataSource: DataSource) {
     fun createTable(table: Tables): Result<String, Results> {
         i("DataBaseMaker.createTable", "Creating table $table")
         val sql = tablesDDL[table]?: ""
-        println(sql)
         dataSource.connection.use {conn ->
             conn.prepareStatement(sql).use {stmt ->
                 try {
