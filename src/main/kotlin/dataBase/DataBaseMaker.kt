@@ -1,5 +1,6 @@
 package dataBase
 
+import logs.i
 import railway.Result
 import railway.Results
 import javax.sql.DataSource
@@ -30,11 +31,13 @@ class DataBaseMaker(private val dataSource: DataSource) {
         """.trimIndent(),
     )
     fun createTable(table: Tables): Result<String, Results> {
+        i("DataBaseMaker.createTable", "Creating table $table")
         val sql = tablesDDL[table]?: ""
         println(sql)
         dataSource.connection.use {conn ->
             conn.prepareStatement(sql).use {stmt ->
                 try {
+                    i("DataBaseMaker.createTable", "Executing sql for $table")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
                     return Result(sql, Results.FAILURE)

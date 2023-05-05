@@ -5,6 +5,7 @@ import dataBase.DataBaseMaker
 import dataBase.Tables
 import dataSource.DataSourceFactory
 import dataSource.DataSourceType
+import logs.i
 import railway.Results
 
 fun main(args: Array<String>) {
@@ -18,6 +19,18 @@ fun main(args: Array<String>) {
     val myGrupoDAO = GrupoDAOH2(myDataSource)
     val myDBChecker = DataBaseChecker(DataSourceFactory)
     val myDataBaseMaker = DataBaseMaker(myDataSource)
+
+    if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
+        Tables.values().forEach {
+            if (myDBChecker.exitsThisTable(it.toString()).result == Results.SUCCESSFUL) {
+                println("Service")
+            } else {
+                myDataBaseMaker.createTable(it)
+            }
+        }
+    } else {
+        println("No DB")
+    }
 
     /*
     if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
