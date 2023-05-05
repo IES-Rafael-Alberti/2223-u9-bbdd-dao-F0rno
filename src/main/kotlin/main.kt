@@ -1,5 +1,5 @@
-import DAO.CtfDAOH2
 import DAO.GrupoDAOH2
+import args.ArgsParser
 import dataBase.DataBaseChecker
 import dataBase.DataBaseMaker
 import dataBase.Tables
@@ -8,11 +8,11 @@ import dataSource.DataSourceType
 import railway.Results
 
 fun main(args: Array<String>) {
-    val argsMap = args.fold(Pair(emptyMap<String, List<String>>(), "")) { (map, lastKey), elem ->
-        if (elem.startsWith("-"))  Pair(map + (elem to emptyList()), elem)
-        else Pair(map + (lastKey to map.getOrDefault(lastKey, emptyList()) + elem), lastKey)
-    }.first
 
+    val parseArgs = ArgsParser.parse(args)
+    println(parseArgs)
+
+    /*
     val myDBChecker = DataBaseChecker(DataSourceFactory)
     if (myDBChecker.exitsTheDB(DataSourceType.HIKARI) == Results.SUCCESSFUL) {
         val myDataSource = DataSourceFactory.getDS(DataSourceType.HIKARI)
@@ -31,6 +31,8 @@ fun main(args: Array<String>) {
     } else {
         println("Cant connecto to the data base")
     }
+    
+     */
 
     /*
     if (myDBChecker.exitsTheDB().result == Results.SUCCESSFUL) {
