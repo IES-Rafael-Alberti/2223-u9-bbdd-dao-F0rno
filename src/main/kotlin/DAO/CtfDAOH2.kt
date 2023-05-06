@@ -32,7 +32,6 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
             i("CtfDAOH2.addGroupToCTF", "Preparing statement")
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setString(1, grupoid.toString())
-                stmt.executeUpdate()
                 try {
                     i("CtfDAOH2.addGroupToCTF", "Executing query")
                     stmt.executeUpdate()
