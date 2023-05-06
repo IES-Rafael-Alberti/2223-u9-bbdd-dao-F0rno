@@ -5,8 +5,16 @@ import railway.Results
 
 val EMPTYLIST = emptyList<String>()
 
+private const val ARGS_3 = 3
+
+private const val ARGS_2 = 2
+
+private const val ARGS_1 = 1
+
+private const val ARGS_0 = 0
+
 object ArgsParser {
-    private fun argsIsValidInt(args: List<String>): Results {
+    private fun argsAreValidsInt(args: List<String>): Results {
         return try {
             args.forEach { arg -> arg.toInt() }
             Results.SUCCESSFUL
@@ -23,14 +31,14 @@ object ArgsParser {
     fun validateArguments(args: Map<String, List<String>>): Result<String, Results> {
         var argsValidation: Result<String, Results> = Result("", Results.SUCCESSFUL)
 
-        if (args.keys.size != 1) {
+        if (args.keys.size != ARGS_1) {
             return Result("Only 1 argument", Results.FAILURE)
         }
 
         if (args["-a"] != null) {
             val aParameterArgs = args["-a"]?: EMPTYLIST
             argsValidation = when (aParameterArgs.size) {
-                3 -> when(argsIsValidInt(aParameterArgs)) {
+                ARGS_3 -> when(argsAreValidsInt(aParameterArgs)) {
                         Results.SUCCESSFUL -> Result("-a is valid", Results.SUCCESSFUL)
                         Results.FAILURE -> Result("-a args need to be numbers", Results.FAILURE)
                     }
@@ -41,7 +49,7 @@ object ArgsParser {
         if (args["-d"] != null) {
             val dParameterArgs = args["-d"]?: EMPTYLIST
             argsValidation = when (dParameterArgs.size) {
-                2 -> when(argsIsValidInt(dParameterArgs)) {
+                ARGS_2 -> when(argsAreValidsInt(dParameterArgs)) {
                     Results.SUCCESSFUL -> Result("-d is valid", Results.SUCCESSFUL)
                     Results.FAILURE -> Result("-d args need to be numbers", Results.FAILURE)
                 }
@@ -52,8 +60,8 @@ object ArgsParser {
         if (args["-l"] != null) {
             val lParameterArgs = args["-l"]?: EMPTYLIST
             argsValidation = when (lParameterArgs.size) {
-                0 -> Result("-l all groups", Results.SUCCESSFUL)
-                1 -> when(argsIsValidInt(lParameterArgs)) {
+                ARGS_0 -> Result("-l all groups", Results.SUCCESSFUL)
+                ARGS_1 -> when(argsAreValidsInt(lParameterArgs)) {
                     Results.SUCCESSFUL -> Result("-l is valid", Results.SUCCESSFUL)
                     Results.FAILURE -> Result("-l arg need to be a number", Results.FAILURE)
                 }
