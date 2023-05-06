@@ -7,7 +7,7 @@ import railway.Results
 import javax.sql.DataSource
 
 class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
-    override fun addGroupToCTF(ctf: Ctf): Result<Ctf, Results> {
+    override fun addGroupParticipationInCTF(ctf: Ctf): Result<Ctf, Results> {
         val sql = "INSERT INTO CTFS (CTFID, GRUPOID, PUNTUACION) VALUES (?, ?, ?);"
         dataSource.connection.use { conn ->
             i("CtfDAOH2.addGroupToCTF", "Preparing statement")
@@ -19,6 +19,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                     i("CtfDAOH2.addGroupToCTF", "Executing query")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
+                    i("CtfDAOH2.addGroupToCTF", "$e")
                     return Result(ctf, Results.FAILURE)
                 }
                 return Result(ctf, Results.SUCCESSFUL)
@@ -36,6 +37,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                     i("CtfDAOH2.addGroupToCTF", "Executing update")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
+                    i("CtfDAOH2.deletGroupFromCTF", "$e")
                     return Result(grupoid, Results.FAILURE)
                 }
                 return Result(grupoid, Results.SUCCESSFUL)
@@ -62,6 +64,7 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
                         )
                     }
                 } catch (e: Exception) {
+                    i("CtfDAOH2.getAllCTFs", "$e")
                     return Result(listOf(), Results.FAILURE)
                 }
                 return Result(ctfs, Results.SUCCESSFUL)

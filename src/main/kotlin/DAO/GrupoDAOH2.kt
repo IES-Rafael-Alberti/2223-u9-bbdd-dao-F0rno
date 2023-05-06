@@ -26,6 +26,7 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
                         )
                     }
                 } catch (e: Exception) {
+                    i("GrupoDAOH2.showAllGroups", "$e")
                     return Result(grupos, Results.FAILURE)
                 }
                 return Result(grupos, Results.SUCCESSFUL)
@@ -51,6 +52,7 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
                         )
                     }
                 } catch (e: Exception) {
+                    i("GrupoDAOH2.showGroup", "$e")
                     return Result(grupo, Results.FAILURE)
                 }
                 return Result(grupo, Results.SUCCESSFUL)
@@ -69,6 +71,7 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
                     i("GrupoDAOH2.addMejorPosCtfId", "Executing update")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
+                    i("GrupoDAOH2.addMejorPosCtfId", "$e")
                     return Results.FAILURE
                 }
                 return Results.SUCCESSFUL
