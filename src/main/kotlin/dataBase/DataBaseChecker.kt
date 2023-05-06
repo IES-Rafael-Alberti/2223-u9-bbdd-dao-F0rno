@@ -25,6 +25,7 @@ class DataBaseChecker(private val dataSourceFactory: DataSourceFactory) {
                 try {
                     HikariDataSource(config).close()
                 } catch (e: Exception) {
+                    i("DataBaseChecker.exitsTheDB", "$e")
                     result = Results.FAILURE
                 }
                 return result
