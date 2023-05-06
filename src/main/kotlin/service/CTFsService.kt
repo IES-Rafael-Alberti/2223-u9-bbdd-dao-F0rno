@@ -13,7 +13,7 @@ class CTFsService(
     private val ctfDAO: CtfDAO,
     private val grupoDAO: GrupoDAO
 ) {
-    fun calculateCtfsRankins(): Map<Int, Int> {
+    private fun calculateCtfsRankins() {
         val rankingsMap = mutableMapOf<Int, Int>()
         val grupos = grupoDAO.showAllGroups().obj
         val ctfs = ctfDAO.getAllCTFs().obj
@@ -21,7 +21,9 @@ class CTFsService(
             rankingsMap[grupo.grupoid] = ctfs.filter { ctf ->
                 ctf.grupoId == grupo.grupoid }.maxByOrNull { ctf -> ctf.puntuacion }?.id ?: 0
         }
-        return rankingsMap
+        rankingsMap.forEach { (grupoID, ctfID) ->
+            grupoDAO.addMejorPosCtfId(grupoID, ctfID)
+        }
     }
 
     private fun addGroupParticipationToCTF(args: List<String>): Result<String, Results> {
@@ -43,15 +45,39 @@ class CTFsService(
         }
     }
 
+    private fun removeGroupMembership(args: List<String>): Result<String, Results> {
+        val ctfid = args[0].toInt()
+        val grupoId = args[1].toInt()
+        i("CTFsService.removeGroupMembership", "Removing participation of a group from a CTF")
+        val rs = ctfDAO.deletGroupFromCTF(ctfid, grupoId)
+        return when (rs.result) {
+            Results.SUCCESSFUL -> Result(
+                "Procesado: Eliminada participación del grupo $grupoId en el CTF $ctfid",
+                Results.SUCCESSFUL
+            )
+            Results.FAILURE -> Result(
+                "ERROR: Al eliminar la participación del grupo $grupoId en el CTF $ctfid",
+                Results.FAILURE
+            )
+        }
+    }
+
+    private fun listGroups() {
+
+    }
+
     fun executeArgs(args: Map<String, List<String>>): Result<String, Results> {
         var resultOfExecution: Result<String, Results> = Result("", Results.FAILURE)
         i("CTFsService.executeArgs", "Executing the args")
+
         if (args["-a"] != null) {
             resultOfExecution = addGroupParticipationToCTF(args["-a"]?: EMPTYLIST)
+            calculateCtfsRankins()
         }
 
         if (args["-d"] != null) {
-            TODO("execute -d")
+            resultOfExecution = removeGroupMembership(args["-d"]?: EMPTYLIST)
+            calculateCtfsRankins()
         }
 
         if (args["-l"] != null) {

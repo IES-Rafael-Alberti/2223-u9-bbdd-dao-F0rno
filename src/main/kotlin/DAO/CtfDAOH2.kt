@@ -27,12 +27,13 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
         }
     }
 
-    override fun deletGroupFromCTF(grupoid: Int, ctfid: Int): Result<Int, Results> {
-        val sql = "DELETE FROM CTFS WHERE GRUPOID = ?;"
+    override fun deletGroupFromCTF(ctfid: Int, grupoid: Int): Result<Int, Results> {
+        val sql = "DELETE FROM CTFS WHERE GRUPOID = ? AND CTFID = ?;"
         dataSource.connection.use { conn ->
             i("CtfDAOH2.addGroupToCTF", "Preparing statement")
             conn.prepareStatement(sql).use { stmt ->
-                stmt.setString(1, grupoid.toString())
+                stmt.setInt(1, grupoid)
+                stmt.setInt(2, ctfid)
                 try {
                     i("CtfDAOH2.addGroupToCTF", "Executing update")
                     stmt.executeUpdate()
