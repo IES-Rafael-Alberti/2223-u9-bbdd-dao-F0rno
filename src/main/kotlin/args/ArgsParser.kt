@@ -6,10 +6,11 @@ import railway.Results
 val EMPTYLIST = emptyList<String>()
 
 object ArgsParser {
-    private fun <T> areAllItemsOfType(list: List<T>): Boolean {
-        if (list.isEmpty()) return false
-        val firstType = list.first()!!::class
-        return list.all { it!!::class == firstType }
+    private fun argsIsValidInt(args: List<String>): Results {
+        return try {
+            args.forEach { arg -> arg.toInt() }
+            Results.SUCCESSFUL
+        } catch (e: Exception) { Results.FAILURE }
     }
 
     fun parse(args: Array<String>): Map<String, List<String>> {
@@ -27,23 +28,35 @@ object ArgsParser {
         }
 
         if (args["-a"] != null) {
-            argsValidation = when (args["-a"]?.size) {
-                3 -> Result("-a is valid", Results.SUCCESSFUL)
+            val aParameterArgs = args["-a"]?: EMPTYLIST
+            argsValidation = when (aParameterArgs.size) {
+                3 -> when(argsIsValidInt(aParameterArgs)) {
+                        Results.SUCCESSFUL -> Result("-a is valid", Results.SUCCESSFUL)
+                        Results.FAILURE -> Result("-a args need to be numbers", Results.FAILURE)
+                    }
                 else -> Result("-a need 3 args", Results.FAILURE)
             }
         }
 
         if (args["-d"] != null) {
-            argsValidation = when (args["-d"]?.size) {
-                2 -> Result("-d is valid", Results.SUCCESSFUL)
+            val dParameterArgs = args["-d"]?: EMPTYLIST
+            argsValidation = when (dParameterArgs.size) {
+                2 -> when(argsIsValidInt(dParameterArgs)) {
+                    Results.SUCCESSFUL -> Result("-d is valid", Results.SUCCESSFUL)
+                    Results.FAILURE -> Result("-d args need to be numbers", Results.FAILURE)
+                }
                 else -> Result("-d need 2 args", Results.FAILURE)
             }
         }
 
         if (args["-l"] != null) {
-            argsValidation = when (args["-l"]?.size) {
+            val lParameterArgs = args["-l"]?: EMPTYLIST
+            argsValidation = when (lParameterArgs.size) {
                 0 -> Result("-l all groups", Results.SUCCESSFUL)
-                1 -> Result("-l one group", Results.SUCCESSFUL)
+                1 -> when(argsIsValidInt(lParameterArgs)) {
+                    Results.SUCCESSFUL -> Result("-l is valid", Results.SUCCESSFUL)
+                    Results.FAILURE -> Result("-l arg need to be a number", Results.FAILURE)
+                }
                 else -> Result("-l is not valid", Results.FAILURE)
             }
         }

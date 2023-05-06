@@ -8,7 +8,6 @@ import dataSource.DataSourceType
 import railway.Results
 
 fun main(args: Array<String>) {
-
     val parseArgs = ArgsParser.parse(args)
     println(parseArgs)
     println(ArgsParser.validateArguments(parseArgs))
