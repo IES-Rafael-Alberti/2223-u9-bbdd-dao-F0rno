@@ -16,11 +16,13 @@ fun main(args: Array<String>) {
     val ctfDAO = CtfDAOH2(dataSourcer)
     val grupoDAO = GrupoDAOH2(dataSourcer)
     val service = CTFsService(ctfDAO, grupoDAO)
+    println(ctfDAO.getAllCTFs().obj.size)
 
+    /*
     val participaciones = listOf(Ctf(1, 1, 3), Ctf(1, 2, 101), Ctf(2, 2, 3), Ctf(2, 1, 50), Ctf(2, 3, 1), Ctf(3, 1, 50), Ctf(3, 3, 5))
     val mejoresCtfByGroupId = calculaMejoresResultados(participaciones)
     println(mejoresCtfByGroupId)
-
+     */
 }
 
 /**

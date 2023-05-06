@@ -33,12 +33,38 @@ class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
             conn.prepareStatement(sql).use { stmt ->
                 stmt.setString(1, grupoid.toString())
                 try {
-                    i("CtfDAOH2.addGroupToCTF", "Executing query")
+                    i("CtfDAOH2.addGroupToCTF", "Executing update")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
                     return Result(grupoid, Results.FAILURE)
                 }
                 return Result(grupoid, Results.SUCCESSFUL)
+            }
+        }
+    }
+
+    override fun getAllCTFs(): Result<List<Ctf>, Results> {
+        val sql = "SELECT * FROM CTFS;"
+        dataSource.connection.use { conn ->
+            i("CtfDAOH2.getAllCTFs", "Preparing statement")
+            conn.prepareStatement(sql).use { stmt ->
+                val ctfs = mutableListOf<Ctf>()
+                try {
+                    i("CtfDAOH2.getAllCTFs", "Executing query")
+                    val rs = stmt.executeQuery()
+                    while (rs.next()) {
+                        ctfs.add(
+                            Ctf(
+                                id = rs.getInt("CTFID"),
+                                grupoId = rs.getInt("GRUPOID"),
+                                puntuacion = rs.getInt("PUNTUACION"),
+                            )
+                        )
+                    }
+                } catch (e: Exception) {
+                    return Result(listOf(), Results.FAILURE)
+                }
+                return Result(ctfs, Results.SUCCESSFUL)
             }
         }
     }
