@@ -13,15 +13,19 @@ class CTFsService(
     private val ctfDAO: CtfDAO,
     private val grupoDAO: GrupoDAO
 ) {
-    private fun calculateCtfsRankins() {
+    private fun calculateCtfsRankings(): MutableMap<Int, Int> {
         val rankingsMap = mutableMapOf<Int, Int>()
-        val grupos = grupoDAO.showAllGroups().obj
+        val groups = grupoDAO.getAllGroups().obj
         val ctfs = ctfDAO.getAllCTFs().obj
-        grupos.forEach { grupo ->
+        groups.forEach { grupo ->
             rankingsMap[grupo.grupoid] = ctfs.filter { ctf ->
                 ctf.grupoId == grupo.grupoid }.maxByOrNull { ctf -> ctf.puntuacion }?.id ?: 0
         }
-        rankingsMap.forEach { (grupoID, ctfID) ->
+        return  rankingsMap
+    }
+
+    private fun setCtfsRankings(rankings: MutableMap<Int, Int>) {
+        rankings.forEach { (grupoID, ctfID) ->
             grupoDAO.addMejorPosCtfId(grupoID, ctfID)
         }
     }
@@ -32,14 +36,15 @@ class CTFsService(
         val puntuacion = args[2].toInt()
         val ctf = Ctf(ctfid, grupoId, puntuacion)
         i("CTFsService.addGroupParticipationToCTF", "Adding participation to CTF")
+        val grupoDesc = grupoDAO.getGroup(grupoId).obj.grupoDesc
         val rs = ctfDAO.addGroupParticipationInCTF(ctf)
         return when (rs.result) {
             Results.SUCCESSFUL -> Result(
-                "Procesado: Añadida participación del grupo $grupoId en el CTF $ctfid con una puntuación de $puntuacion puntos.",
+                "Procesado: Añadida participación del grupo $grupoDesc en el CTF $ctfid con una puntuación de $puntuacion puntos.",
                 Results.SUCCESSFUL
             )
             Results.FAILURE -> Result(
-                "ERROR: Error al añadir la participación del grupo:$grupoId, en el CTF:$ctfid",
+                "ERROR: Error al añadir la participación del grupo:$grupoDesc, en el CTF:$ctfid",
                 Results.FAILURE
             )
         }
@@ -49,21 +54,37 @@ class CTFsService(
         val ctfid = args[0].toInt()
         val grupoId = args[1].toInt()
         i("CTFsService.removeGroupMembership", "Removing participation of a group from a CTF")
+        val grupoDesc = grupoDAO.getGroup(grupoId).obj.grupoDesc
         val rs = ctfDAO.deletGroupFromCTF(ctfid, grupoId)
         return when (rs.result) {
             Results.SUCCESSFUL -> Result(
-                "Procesado: Eliminada participación del grupo $grupoId en el CTF $ctfid",
+                "Procesado: Eliminada participación del grupo $grupoDesc en el CTF $ctfid",
                 Results.SUCCESSFUL
             )
             Results.FAILURE -> Result(
-                "ERROR: Al eliminar la participación del grupo $grupoId en el CTF $ctfid",
+                "ERROR: Al eliminar la participación del grupo $grupoDesc en el CTF $ctfid",
                 Results.FAILURE
             )
         }
     }
 
-    private fun listGroups() {
-
+    private fun listGroups(args: List<String>): Result<List<String>, Results> {
+        val groups = mutableListOf<String>()
+        i("CTFsService.listGroups", "Listing groups info")
+        when(args.size) {
+            0 -> {
+                grupoDAO.getAllGroups().obj.forEach { group ->
+                    groups.add("GRUPO: ${group.grupoid}   ${group.grupoDesc}  MEJORCTF: ${group.mejorCtfId}")
+                }
+            }
+            else -> {
+                args.forEach { grupoId ->
+                    val group = grupoDAO.getGroup(grupoId.toInt()).obj
+                    groups.add("GRUPO: ${group.grupoid}   ${group.grupoDesc}  MEJORCTF: ${group.mejorCtfId}")
+                }
+            }
+        }
+        return Result(groups, Results.SUCCESSFUL)
     }
 
     fun executeArgs(args: Map<String, List<String>>): Result<String, Results> {
@@ -72,16 +93,16 @@ class CTFsService(
 
         if (args["-a"] != null) {
             resultOfExecution = addGroupParticipationToCTF(args["-a"]?: EMPTYLIST)
-            calculateCtfsRankins()
+            setCtfsRankings(calculateCtfsRankings())
         }
 
         if (args["-d"] != null) {
             resultOfExecution = removeGroupMembership(args["-d"]?: EMPTYLIST)
-            calculateCtfsRankins()
+            setCtfsRankings(calculateCtfsRankings())
         }
 
-        if (args["-l"] != null) {
-            TODO("execute -l")
+        if (args["-l"] != null || args["-l"] == emptyList<String>()) {
+            resultOfExecution =  Result(listGroups(args["-l"]?: EMPTYLIST).obj.joinToString("\n"), Results.SUCCESSFUL)
         }
         return resultOfExecution
     }

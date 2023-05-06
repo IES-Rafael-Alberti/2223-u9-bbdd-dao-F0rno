@@ -7,7 +7,7 @@ import railway.Results
 import javax.sql.DataSource
 
 class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
-    override fun showAllGroups(): Result<List<Grupo>, Results> {
+    override fun getAllGroups(): Result<List<Grupo>, Results> {
         val sql = "SELECT * FROM GRUPOS;"
         dataSource.connection.use { conn ->
             i("GrupoDAOH2.showAllGroups", "Preparing statement")
@@ -34,7 +34,7 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
         }
     }
 
-    override fun showGroup(grupoId: Int): Result<Grupo, Results> {
+    override fun getGroup(grupoId: Int): Result<Grupo, Results> {
         val sql = "SELECT * FROM GRUPOS WHERE GRUPOID = ?;"
         dataSource.connection.use { conn ->
             i("GrupoDAOH2.showGroup", "Preparing statement")
