@@ -7,7 +7,7 @@ import railway.Results
 import javax.sql.DataSource
 
 class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
-    override fun showAllGroups(): List<Grupo> {
+    override fun showAllGroups(): Result<List<Grupo>, Results> {
         val sql = "SELECT * FROM GRUPOS;"
         dataSource.connection.use { conn ->
             i("GrupoDAOH2.showAllGroups", "Preparing statement")
@@ -17,17 +17,18 @@ class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
                     i("GrupoDAOH2.showAllGroups", "Executing query")
                     val rs = stmt.executeQuery()
                     while (rs.next()) {
-                        grupos.add(Grupo(
+                        grupos.add(
+                            Grupo(
                             grupoid = rs.getInt("GRUPOID"),
                             grupoDesc = rs.getString("GRUPODESC"),
                             mejorCtfId = rs.getInt("MEJORPOSCTFID"),
-                        )
+                            )
                         )
                     }
                 } catch (e: Exception) {
-                    return grupos
+                    return Result(grupos, Results.FAILURE)
                 }
-                return grupos
+                return Result(grupos, Results.SUCCESSFUL)
             }
         }
     }
