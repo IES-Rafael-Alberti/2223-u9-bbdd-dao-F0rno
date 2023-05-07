@@ -30,6 +30,7 @@ class DataBaseMaker(private val dataSource: DataSource) {
             insert into grupos(grupoid, grupodesc, MEJORPOSCTFID) values(6, '1DAW-G3', null);
         """.trimIndent(),
     )
+
     fun createTable(table: Tables): Result<String, Results> {
         i("DataBaseMaker.createTable", "Creating table $table")
         val sql = tablesDDL[table]?: ""

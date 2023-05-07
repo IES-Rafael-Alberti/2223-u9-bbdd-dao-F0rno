@@ -17,9 +17,9 @@ class CTFsService(
         val rankingsMap = mutableMapOf<Int, Int>()
         val groups = grupoDAO.getAllGroups().obj
         val ctfs = ctfDAO.getAllCTFs().obj
-        groups.forEach { grupo ->
-            rankingsMap[grupo.grupoid] = ctfs.filter { ctf ->
-                ctf.grupoId == grupo.grupoid }.maxByOrNull { ctf -> ctf.puntuacion }?.id ?: 0
+        groups.forEach { group ->
+            rankingsMap[group.grupoid] = ctfs.filter { ctf ->
+                ctf.grupoId == group.grupoid }.maxByOrNull { ctf -> ctf.puntuacion }?.id ?: 0
         }
         return  rankingsMap
     }
@@ -78,8 +78,8 @@ class CTFsService(
                 }
             }
             else -> {
-                args.forEach { grupoId ->
-                    val group = grupoDAO.getGroup(grupoId.toInt()).obj
+                args.forEach { groupId ->
+                    val group = grupoDAO.getGroup(groupId.toInt()).obj
                     groups.add("GRUPO: ${group.grupoid}   ${group.grupoDesc}  MEJORCTF: ${group.mejorCtfId}")
                 }
             }

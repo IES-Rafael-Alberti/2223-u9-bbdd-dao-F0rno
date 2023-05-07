@@ -1,7 +1,5 @@
 package dataBase
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
 import dataSource.DataSourceFactory
 import dataSource.DataSourceType
 import logs.i
@@ -10,27 +8,14 @@ import railway.Results
 
 class DataBaseChecker(private val dataSourceFactory: DataSourceFactory) {
     fun exitsTheDB(dataSourceType: DataSourceType): Results {
-        when (dataSourceType) {
-            DataSourceType.HIKARI -> {
-                i("DataBaseChecker.exitsTheDB", "Testing connexion to the DB, using HIKARI")
-                val config = HikariConfig()
-                config.jdbcUrl = "jdbc:h2:./default"
-                config.username = "user"
-                config.password = "user"
-                config.driverClassName = "org.h2.Driver"
-                config.maximumPoolSize = 10
-                config.isAutoCommit = true
-                config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-                var result = Results.SUCCESSFUL
-                try {
-                    HikariDataSource(config).close()
-                } catch (e: Exception) {
-                    i("DataBaseChecker.exitsTheDB", "$e")
-                    result = Results.FAILURE
-                }
-                return result
-            }
+        var dataBaseConnResult = Results.SUCCESSFUL
+        try {
+            DataSourceFactory.getDS(dataSourceType)
+        } catch (e: Exception) {
+            i("DataBaseChecker.exitsTheDB", "$e")
+            dataBaseConnResult = Results.FAILURE
         }
+        return dataBaseConnResult
     }
 
     fun exitsThisTable(tableName: String): Result<String, Results> {
