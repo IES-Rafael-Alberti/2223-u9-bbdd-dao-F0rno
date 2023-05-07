@@ -1,5 +1,6 @@
 package dataBase
 
+import dataSource.DataSourceFactory
 import logs.i
 import railway.Result
 import railway.Results
@@ -40,10 +41,23 @@ class DataBaseMaker(private val dataSource: DataSource) {
                     i("DataBaseMaker.createTable", "Executing sql for $table")
                     stmt.executeUpdate()
                 } catch (e: Exception) {
+                    i("DataBaseMaker.createTable", "$e")
                     return Result(sql, Results.FAILURE)
                 }
                 return Result(sql, Results.SUCCESSFUL)
             }
         }
+    }
+
+    fun createNecessaryTables(): Result<String, Results> {
+        Tables.values().forEach { table ->
+            val existTheTable = DataBaseChecker(DataSourceFactory).exitsThisTable(table.toString())
+            if (existTheTable.result == Results.FAILURE) {
+                if (createTable(table).result == Results.FAILURE) {
+                    return Result("Error creating the table: table", Results.FAILURE)
+                }
+            }
+        }
+        return Result("All tables done", Results.SUCCESSFUL)
     }
 }

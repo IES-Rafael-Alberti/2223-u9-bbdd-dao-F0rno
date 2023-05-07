@@ -7,15 +7,14 @@ import railway.Result
 import railway.Results
 
 class DataBaseChecker(private val dataSourceFactory: DataSourceFactory) {
-    fun exitsTheDB(dataSourceType: DataSourceType): Results {
-        var dataBaseConnResult = Results.SUCCESSFUL
+    fun exitsTheDB(dataSourceType: DataSourceType): Result<String, Results> {
         try {
             DataSourceFactory.getDS(dataSourceType)
         } catch (e: Exception) {
             i("DataBaseChecker.exitsTheDB", "$e")
-            dataBaseConnResult = Results.FAILURE
+            return Result("Cant connect to the database or does not exists", Results.FAILURE)
         }
-        return dataBaseConnResult
+        return Result("Can connect to the database", Results.SUCCESSFUL)
     }
 
     fun exitsThisTable(tableName: String): Result<String, Results> {

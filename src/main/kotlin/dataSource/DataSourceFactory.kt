@@ -2,10 +2,8 @@ package dataSource
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import railway.Result
-import railway.Results
-import javax.sql.DataSource
 import logs.i
+import javax.sql.DataSource
 
 object DataSourceFactory {
     fun getDS(dataSourceType: DataSourceType): DataSource {

@@ -1,10 +1,8 @@
 import DAO.CtfDAOH2
-import DAO.GrupoDAO
 import DAO.GrupoDAOH2
 import args.ArgsParser
 import dataBase.DataBaseChecker
 import dataBase.DataBaseMaker
-import dataBase.Tables
 import dataSource.DataSourceFactory
 import dataSource.DataSourceType
 import railway.Results
@@ -13,7 +11,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     val parseArgs = ArgsParser.parse(args)
-    val parseResult =  ArgsParser.validateArguments(parseArgs)
+    val parseResult = ArgsParser.validateArguments(parseArgs)
 
     if (parseResult.result == Results.FAILURE) {
         println(parseResult.obj)
@@ -22,23 +20,23 @@ fun main(args: Array<String>) {
 
     val dataBaseChecker = DataBaseChecker(DataSourceFactory)
 
-    if (dataBaseChecker.exitsTheDB(DataSourceType.HIKARI) == Results.FAILURE) {
-        println("No se puede connectar con la base de datos")
+    val dataBaseExists = dataBaseChecker.exitsTheDB(DataSourceType.HIKARI)
+    if (dataBaseExists.result == Results.FAILURE) {
+        println(dataBaseExists.obj)
         exitProcess(1)
     }
 
-    val dataSourcer = DataSourceFactory.getDS(DataSourceType.HIKARI)
-    val dataBaseMaker = DataBaseMaker(dataSourcer)
+    val dataSource = DataSourceFactory.getDS(DataSourceType.HIKARI)
+    val dataBaseMaker = DataBaseMaker(dataSource)
 
-    Tables.values().forEach { table ->
-        val rs = dataBaseChecker.exitsThisTable(table.toString())
-        if (rs.result == Results.FAILURE) {
-            dataBaseMaker.createTable(table)
-        }
+    val creatingTables = dataBaseMaker.createNecessaryTables()
+    if (creatingTables.result == Results.FAILURE) {
+        println(creatingTables.obj)
+        exitProcess(1)
     }
 
-    val ctfDAO = CtfDAOH2(dataSourcer)
-    val grupoDAO = GrupoDAOH2(dataSourcer)
+    val ctfDAO = CtfDAOH2(dataSource)
+    val grupoDAO = GrupoDAOH2(dataSource)
     val service = CTFsService(ctfDAO, grupoDAO)
 
     println(service.executeArgs(parseArgs).obj)

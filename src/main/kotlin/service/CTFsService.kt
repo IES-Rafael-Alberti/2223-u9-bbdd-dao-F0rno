@@ -37,8 +37,8 @@ class CTFsService(
         val ctf = Ctf(ctfid, grupoId, puntuacion)
         i("CTFsService.addGroupParticipationToCTF", "Adding participation to CTF")
         val grupoDesc = grupoDAO.getGroup(grupoId).obj.grupoDesc
-        val rs = ctfDAO.addGroupParticipationInCTF(ctf)
-        return when (rs.result) {
+        val addGroupParticipation = ctfDAO.addGroupParticipationInCTF(ctf)
+        return when (addGroupParticipation.result) {
             Results.SUCCESSFUL -> Result(
                 "Procesado: Añadida participación del grupo $grupoDesc en el CTF $ctfid con una puntuación de $puntuacion puntos.",
                 Results.SUCCESSFUL
@@ -55,8 +55,8 @@ class CTFsService(
         val grupoId = args[1].toInt()
         i("CTFsService.removeGroupMembership", "Removing participation of a group from a CTF")
         val grupoDesc = grupoDAO.getGroup(grupoId).obj.grupoDesc
-        val rs = ctfDAO.deletGroupFromCTF(ctfid, grupoId)
-        return when (rs.result) {
+        val deletGroup = ctfDAO.deletGroupFromCTF(ctfid, grupoId)
+        return when (deletGroup.result) {
             Results.SUCCESSFUL -> Result(
                 "Procesado: Eliminada participación del grupo $grupoDesc en el CTF $ctfid",
                 Results.SUCCESSFUL
