@@ -11,7 +11,13 @@ private const val ARGS_2 = 2
 private const val ARGS_1 = 1
 private const val ARGS_0 = 0
 
+/**
+ * Checks if parse arguments are valid
+ */
 object ArgsValidator {
+    /**
+     * Checks if the args are numbers
+     */
     private fun argsAreValidsInt(args: List<String>): Results {
         return try {
             args.forEach { arg -> arg.toInt() }
@@ -19,6 +25,9 @@ object ArgsValidator {
         } catch (e: Exception) { Results.FAILURE }
     }
 
+    /**
+     * Checks if the args meet the requirements
+     */
     fun validateArguments(args: Map<String, List<String>>): Result<String, Results> {
         var argsValidation: Result<String, Results> = Result("", Results.SUCCESSFUL)
 

@@ -5,6 +5,9 @@ import com.zaxxer.hikari.HikariDataSource
 import logs.i
 import javax.sql.DataSource
 
+/**
+ * Allows you to generate data sources from differences sources
+ */
 object DataSourceFactory {
     fun getDS(dataSourceType: DataSourceType): DataSource {
         return when (dataSourceType) {

@@ -6,6 +6,9 @@ import railway.Result
 import railway.Results
 import javax.sql.DataSource
 
+/**
+ * Allows you to perform operations on the CTF table of the h2 database
+ */
 class CtfDAOH2(private val dataSource: DataSource) : CtfDAO {
     override fun addGroupParticipationInCTF(ctf: Ctf): Result<Ctf, Results> {
         val sql = "INSERT INTO CTFS (CTFID, GRUPOID, PUNTUACION) VALUES (?, ?, ?);"

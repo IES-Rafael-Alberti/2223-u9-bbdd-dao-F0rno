@@ -6,6 +6,9 @@ import railway.Result
 import railway.Results
 import javax.sql.DataSource
 
+/**
+ * Allows you to perform operations on the GRUPO table of the h2 database
+ */
 class GrupoDAOH2(private val dataSource: DataSource) : GrupoDAO  {
     override fun getAllGroups(): Result<List<Grupo>, Results> {
         val sql = "SELECT * FROM GRUPOS;"

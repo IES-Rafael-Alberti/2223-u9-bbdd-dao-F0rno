@@ -21,6 +21,7 @@ dependencies {
     implementation ("com.zaxxer:HikariCP:5.0.0")
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.0")
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
 }
 
 tasks.test {
