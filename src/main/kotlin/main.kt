@@ -1,6 +1,7 @@
 import DAO.CtfDAOH2
 import DAO.GrupoDAOH2
 import args.ArgsParser
+import args.ArgsValidator
 import dataBase.DataBaseChecker
 import dataBase.DataBaseMaker
 import dataSource.DataSourceFactory
@@ -11,7 +12,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     val parseArgs = ArgsParser.parse(args)
-    val parseResult = ArgsParser.validateArguments(parseArgs)
+    val parseResult = ArgsValidator.validateArguments(parseArgs)
 
     if (parseResult.result == Results.FAILURE) {
         println(parseResult.obj)
